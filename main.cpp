@@ -204,26 +204,37 @@ void testMRI2()
 void testMRI3()
 {
 	char *pt="single_well";
-	int l = 512,m = 512,n = 144, l1=0,l2=0,iter_outer=10;
+	int l = 512,m = 512,n = 144, l1=0,l2=0,iter_outer=50;
 	RawImage test;
 	char dirbody[100];
 
-	short * indata=test.readMRI("K:\\sdf\\MRI\\SE1512_512_144.raw",&l,&m,&n);
+	short * indata=test.readMRI("K:\\sdf\\MRI\\SE1512_512_144.raw",&l,&m,&n);//F:\\PA1\\ST1\\SE1\\  //K:\\sdf\\MRI\\
+
 	Raw *initial=new Raw(l,m,n);
 	float *inputo=new float[l*m*n];
+	short min =-1000,max =0;
 	for (int i = 0; i < l*m*n; i++)
 	{
-		if ( inputo[i] >= 900 && inputo[i] <= 1200 )
+		float * p= (float *)(indata+i);
+		unsigned char * bp= (unsigned char *)p;
+		std:swap(bp[0],bp[3]);
+		std::swap(bp[1],bp[2]);
+		min < indata[i] ? min=min:min=indata[i];
+		max > indata[i] ? max=max:max=indata[i];
+		
+		if ( indata[i] >= 864 && indata[i] <= 1063 )
 		{
-			inputo[i] = 100;
+			inputo[i] = 1000;
 		} 
 		else
 		{
-			inputo[i] = 0;
+			inputo[i] = (short )0;
 		}
 		
-		//inputo[i]=(float) indata[i];		
+		//inputo[i]=(short) indata[i];		
 	}
+
+	cout <<min << max <<endl;
 
 	Raw *input=new Raw(l,m,n,inputo);
 
@@ -232,6 +243,19 @@ void testMRI3()
 	RawImage *write=new RawImage();
 	ThreeDim_LevelSet *ls=new ThreeDim_LevelSet();
 	ls->initialg(*input);
+	//for (int i = 0 ; i < l; i++ )
+	//{
+	//	for ( int j = 0; j < m; j++)
+	//	{
+	//		for ( int k = 0; k < n; k++ )
+	//		{
+	//			if ( !(i > 172 && i < 352 && j > 164 && j < 376))
+	//			{
+	//				input->put(i,j,k,0); 
+	//			}
+	//		}
+	//	}
+	//}
 	//int x1= 198 ,y1 = 208  , z1 = 40,
 	//	x12 =295 ,y12 =212 ,z12  = 40,
 	//	x13,y13,z13,
@@ -246,18 +270,26 @@ void testMRI3()
 		{
 			for (int k=0; k<input->getZsize(); k++)
 			{
-				if (input->get(i,j,k)>=1)
+				if (input->get(i,j,k) >= 1)
 				{
 					initial->put(i,j,k,-2);
 				}
-				else initial->put(i,j,k,2);
+				else if ((i > 172 && i < 352 && j > 164 && j < 376))
+				{
+					initial->put(i,j,k,2);
+				} 
+				else
+				{
+					initial->put(i,j,k,-2);
+				}
+				
 
 			}
 		}
 
 	}
 	*initial=ls->minimal_surface(*initial,*input,5.0,0.1,-3,1.5,1,iter_outer,pt);
-	test.writeMRI(*input,"K:\\sdf\\MRI\\SE1512_512_144out2regions.raw");
+	test.writeMRI(*input,"K:\\sdf\\MRI\\SE1512_512_144.rawout2regions.raw");
 	//Raw temp(*initial);
 	//ls->outerwallauto(*initial,*input,5.0,0.1,-3,1.5,1,10,pt);
 	////*initial -=temp;

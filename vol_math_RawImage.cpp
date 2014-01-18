@@ -118,7 +118,7 @@ short * RawImage::readMRI(char const *filename,int *l,int * m,int  * n)
 	int size=lx*ly*lz*sizeof(short);
 	*l=lx;*m=ly;*n=lz;
 	short *buf=new short[size];
-	file.seekg(512*512*100,ios::beg);//+512*512*345*sizeof(short)
+	//file.seekg(512*512*100,ios::beg);//+512*512*345*sizeof(short)
 	file.read((char *)buf,size);
 	file.close();
 	return buf;

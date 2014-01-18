@@ -101,7 +101,7 @@ void evaluate(string dir,int l,int m,int n)
 		{
 			for ( int i = 0; i < l; i++)
 			{
-				PIXTYPE *val=&indata1[k*m*l+j*l+i];
+				PIXTYPE *val=(PIXTYPE *)&indata1[k*m*l+j*l+i];
 				//if(i<409 &&i> 107 && j>156 &&j <390)
 				//{
 				//	if (*val>1)
@@ -231,44 +231,46 @@ void pvalue( string dir1,string dir2,string dir22)
 	delete [] indata3;
 
 }
-void ddcircle(string dir)
-{
-	int l=512;
-	int m=512; 
-	int	n=700;
-	RawImage test;
-	char dst[100];
-	strcpy(dst,dir.c_str());
-	char dir2[200]="D:\\sdfdata\\";
-	strcat(dir2,dst);
-	char dir1[200] = "J:\\swfdata\\";
-	strcat(dir1,dst);
-	float * indata1=test.readStreamfloat(dir2,&l,&m,&n);
-	for (int i = 0; i < n; i++)
-	{
-		for ( int j = 0; j < l; j++)
-		{
-			for ( int k = 0; k < m; k++)
-			{
-				PIXTYPE *val=&indata1[i*l*m+j*m+k];
-				if ((( j - 256 ) * ( j - 256 ) + ( k - 256 ) * ( k-256 )) >= 40000)
-				{
 
-					*val = 0;
-
-				} 
-			}
-		}
-	}
-	//Raw *indata=new Raw(l,m,n,indata1);
-	FILE *p;
-	p=fopen(dir1,"wb");
-	fwrite(indata1,sizeof(PIXTYPE),l*m*n,p);
-	fclose(p);
-	fflush(stdout);
-	delete [] indata1;
-	//indata->~Raw();
-}
+//swf delete for data type conflict 2014/1/18
+//void ddcircle(string dir)
+//{
+//	int l=512;
+//	int m=512; 
+//	int	n=700;
+//	RawImage test;
+//	char dst[100];
+//	strcpy(dst,dir.c_str());
+//	char dir2[200]="D:\\sdfdata\\";
+//	strcat(dir2,dst);
+//	char dir1[200] = "J:\\swfdata\\";
+//	strcat(dir1,dst);
+//	float * indata1=test.readStreamfloat(dir2,&l,&m,&n);
+//	for (int i = 0; i < n; i++)
+//	{
+//		for ( int j = 0; j < l; j++)
+//		{
+//			for ( int k = 0; k < m; k++)
+//			{
+//				PIXTYPE *val=&indata1[i*l*m+j*m+k];
+//				if ((( j - 256 ) * ( j - 256 ) + ( k - 256 ) * ( k-256 )) >= 40000)
+//				{
+//
+//					*val = 0;
+//
+//				} 
+//			}
+//		}
+//	}
+//	//Raw *indata=new Raw(l,m,n,indata1);
+//	FILE *p;
+//	p=fopen(dir1,"wb");
+//	fwrite(indata1,sizeof(PIXTYPE),l*m*n,p);
+//	fclose(p);
+//	fflush(stdout);
+//	delete [] indata1;
+//	//indata->~Raw();
+//}
 void roc()
 {
 	string dir1(input1);//K:\sdf\volume\clean\clean\ep// D:\sdfdata\distance\rocdata
@@ -370,150 +372,151 @@ void float2uchar(int l, int m ,int n,string dir)
 	delete [] outdata;
 
 }
-void thincknessstd(string dir)
-{
-	int l=512;
-	int m=512; 
-	int	n=700;
-	RawImage test;
-	char dst[100];
-	strcpy(dst,dir.c_str());
-	char readdir[200]="L:\\sdfdata2\\edt\\";
-	strcat(readdir,dst);
-	//char writedir[200] = "J:\\swfdata\\";
-	//strcat(writedir,dst);
-	PIXTYPE * indata1=test.readStreamfloat(readdir,&l,&m,&n);
-	Raw *src = new Raw(l,m,n,indata1);
-	PIXTYPE sum = 0, std = 0, mean = 0, s = 0;
-	int countall = 0;
-	int countboundary = 0;
-	for (int k = 0; k < src->getZsize(); k++)
-	{
-		for ( int j = 0 ; j < src->getYsize(); j++)
-		{
-			for ( int i =0 ; i < src->getXsize() ; i ++)
-			{
-				PIXTYPE  val = src->get(i,j,k);
-				float * p= &val;
-				unsigned char * bp= (unsigned char *)p;
-				std:swap(bp[0],bp[3]);
-				std::swap(bp[1],bp[2]);
-				//cout << val <<endl;
-				if (val > 0 && val <100 )
-				{
+// delelete for data type conflict
+//void thincknessstd(string dir)
+//{
+//	int l=512;
+//	int m=512; 
+//	int	n=700;
+//	RawImage test;
+//	char dst[100];
+//	strcpy(dst,dir.c_str());
+//	char readdir[200]="L:\\sdfdata2\\edt\\";
+//	strcat(readdir,dst);
+//	//char writedir[200] = "J:\\swfdata\\";
+//	//strcat(writedir,dst);
+//	PIXTYPE * indata1=test.readStreamfloat(readdir,&l,&m,&n);
+//	Raw *src = new Raw(l,m,n,indata1);
+//	PIXTYPE sum = 0, std = 0, mean = 0, s = 0;
+//	int countall = 0;
+//	int countboundary = 0;
+//	for (int k = 0; k < src->getZsize(); k++)
+//	{
+//		for ( int j = 0 ; j < src->getYsize(); j++)
+//		{
+//			for ( int i =0 ; i < src->getXsize() ; i ++)
+//			{
+//				PIXTYPE  val = src->get(i,j,k);
+//				float * p= &val;
+//				unsigned char * bp= (unsigned char *)p;
+//				std:swap(bp[0],bp[3]);
+//				std::swap(bp[1],bp[2]);
+//				//cout << val <<endl;
+//				if (val > 0 && val <100 )
+//				{
+//
+//					//cout <<val <<endl;
+//					sum +=  val;
+//
+//					s += val*val;		//std simple implementation ,just for data less than 10
+//
+//					countall++;
+//					if ( src->get ( i-1, j ,k)== 0|| src->get(i-1 ,j-1,k)==0 || src->get(i-1,j+1,k)==0 \
+//						|| src->get(i,j-1,k)==0|| src->get(i,j+1,k)==0 || src->get(i+1,j,k) == 0 || src->get(i+1,j-1,k)==0|| src->get(i+1,j+1,k)==0)
+//					{
+//						countboundary ++;
+//					}
+//				} 
+//				//else
+//				//{
+//				//}
+//			}
+//		}
+//
+//	}
+//	mean = sqrt((float)sum) / countboundary;
+//	std = sqrt((float)s-countboundary*mean)/ countboundary ;
+//	PIXTYPE *res =new PIXTYPE [2];
+//	res[1]=mean;
+//	res[2]=std;
+//	cout<<"mean" <<mean <<"std"<< std<<endl;
+//	ofstream os("K:\\sdf\\volume\\clean\\clean\\ep\\meanstd.txt",ios::app);
+//	if (os)
+//	{
+//		for (int i=0; i <2; i++)
+//		{
+//			os << res[i] <<" ";
+//
+//		}
+//		os << endl;
+//	} 
+//	delete [] res;
+//	delete [] indata1;
+//
+//}
 
-					//cout <<val <<endl;
-					sum +=  val;
-
-					s += val*val;		//std simple implementation ,just for data less than 10
-
-					countall++;
-					if ( src->get ( i-1, j ,k)== 0|| src->get(i-1 ,j-1,k)==0 || src->get(i-1,j+1,k)==0 \
-						|| src->get(i,j-1,k)==0|| src->get(i,j+1,k)==0 || src->get(i+1,j,k) == 0 || src->get(i+1,j-1,k)==0|| src->get(i+1,j+1,k)==0)
-					{
-						countboundary ++;
-					}
-				} 
-				//else
-				//{
-				//}
-			}
-		}
-
-	}
-	mean = sqrt(sum) / countboundary;
-	std = sqrt(s-countboundary*mean)/ countboundary ;
-	PIXTYPE *res =new PIXTYPE [2];
-	res[1]=mean;
-	res[2]=std;
-	cout<<"mean" <<mean <<"std"<< std<<endl;
-	ofstream os("K:\\sdf\\volume\\clean\\clean\\ep\\meanstd.txt",ios::app);
-	if (os)
-	{
-		for (int i=0; i <2; i++)
-		{
-			os << res[i] <<" ";
-
-		}
-		os << endl;
-	} 
-	delete [] res;
-	delete [] indata1;
-
-}
-
-void thincknessstdv2(string dir)
-{
-	int l=512;
-	int m=512; 
-	int	n=700;
-	RawImage test;
-	char dst[100];
-	strcpy(dst,dir.c_str());
-	char readdir[200]="L:\\sdfdata2\\edt\\";
-	strcat(readdir,dst);
-	//char writedir[200] = "J:\\swfdata\\";
-	//strcat(writedir,dst);
-	PIXTYPE * indata1=test.readStreamfloat(readdir,&l,&m,&n);
-	Raw *src = new Raw(l,m,n,indata1);
-	PIXTYPE sum = 0, std = 0, mean = 0, s = 0;
-	int countall = 0;
-	int countboundary = 0;
-	for (int k = 0; k < src->getZsize(); k++)
-	{
-		for ( int j = 0 ; j < src->getYsize(); j++)
-		{
-			for ( int i =0 ; i < src->getXsize() ; i ++)
-			{
-				PIXTYPE  val = src->get(i,j,k);
-				float * p= &val;
-				unsigned char * bp= (unsigned char *)p;
-				std:swap(bp[0],bp[3]);
-				std::swap(bp[1],bp[2]);
-				//cout << val <<endl;
-				if (val > 0 && val <100 )
-				{
-
-					//cout <<val <<endl;
-
-
-					countall++;
-					if ( src->get ( i-1, j ,k) <= val || src->get(i-1 ,j-1,k) <= val || src->get(i-1,j+1,k) <=val \
-						|| src->get(i,j-1,k)<=val || src->get(i,j+1,k)<= val || src->get(i+1,j,k) <= val || src->get(i+1,j-1,k)<= val || src->get(i+1,j+1,k)<= val)
-					{
-						sum +=  val;
-
-						s += val*val;		//std simple implementation ,just for data less than 10
-						countboundary ++;
-					}
-				} 
-				//else
-				//{
-				//}
-			}
-		}
-
-	}
-	mean = sum / countboundary;
-	std = sqrt((s-countboundary*mean*mean)/ countboundary );
-	PIXTYPE *res =new PIXTYPE [2];
-	res[1]=mean;
-	res[2]=std;
-	cout<<"mean" <<mean <<"std"<< std<<endl;
-	ofstream os("K:\\sdf\\volume\\clean\\clean\\ep\\meanstd.txt",ios::app);
-	if (os)
-	{
-		for (int i=0; i <2; i++)
-		{
-			os << res[i] <<" ";
-
-		}
-		os << endl;
-	} 
-	delete [] res;
-	delete [] indata1;
-
-}
+//void thincknessstdv2(string dir)
+//{
+//	int l=512;
+//	int m=512; 
+//	int	n=700;
+//	RawImage test;
+//	char dst[100];
+//	strcpy(dst,dir.c_str());
+//	char readdir[200]="L:\\sdfdata2\\edt\\";
+//	strcat(readdir,dst);
+//	//char writedir[200] = "J:\\swfdata\\";
+//	//strcat(writedir,dst);
+//	PIXTYPE * indata1=test.readStreamfloat(readdir,&l,&m,&n);
+//	Raw *src = new Raw(l,m,n,indata1);
+//	PIXTYPE sum = 0, std = 0, mean = 0, s = 0;
+//	int countall = 0;
+//	int countboundary = 0;
+//	for (int k = 0; k < src->getZsize(); k++)
+//	{
+//		for ( int j = 0 ; j < src->getYsize(); j++)
+//		{
+//			for ( int i =0 ; i < src->getXsize() ; i ++)
+//			{
+//				PIXTYPE  val = src->get(i,j,k);
+//				float * p= &val;
+//				unsigned char * bp= (unsigned char *)p;
+//				std:swap(bp[0],bp[3]);
+//				std::swap(bp[1],bp[2]);
+//				//cout << val <<endl;
+//				if (val > 0 && val <100 )
+//				{
+//
+//					//cout <<val <<endl;
+//
+//
+//					countall++;
+//					if ( src->get ( i-1, j ,k) <= val || src->get(i-1 ,j-1,k) <= val || src->get(i-1,j+1,k) <=val \
+//						|| src->get(i,j-1,k)<=val || src->get(i,j+1,k)<= val || src->get(i+1,j,k) <= val || src->get(i+1,j-1,k)<= val || src->get(i+1,j+1,k)<= val)
+//					{
+//						sum +=  val;
+//
+//						s += val*val;		//std simple implementation ,just for data less than 10
+//						countboundary ++;
+//					}
+//				} 
+//				//else
+//				//{
+//				//}
+//			}
+//		}
+//
+//	}
+//	mean = sum / countboundary;
+//	std = sqrt((s-countboundary*mean*mean)/ countboundary );
+//	PIXTYPE *res =new PIXTYPE [2];
+//	res[1]=mean;
+//	res[2]=std;
+//	cout<<"mean" <<mean <<"std"<< std<<endl;
+//	ofstream os("K:\\sdf\\volume\\clean\\clean\\ep\\meanstd.txt",ios::app);
+//	if (os)
+//	{
+//		for (int i=0; i <2; i++)
+//		{
+//			os << res[i] <<" ";
+//
+//		}
+//		os << endl;
+//	} 
+//	delete [] res;
+//	delete [] indata1;
+//
+//}
 void testcolonway2(int argc,string dir)
 {
 	
@@ -627,118 +630,118 @@ PIXTYPE  biglittleedian(PIXTYPE  val)
 	std::swap(p[1],p[2]);
 	return val;
 }
-void rocwayinner2people(string dir1, string dir2)
-{
-	int l=0,m=0,n=0;
-	char dst1[200],dst2[200];
-	strcpy(dst1,dir1.c_str()); //string-->char
-	strcpy(dst2,dir2.c_str());
-	RawImage test;
-	char dir3[200]="L:\\sdfdata2\\inner\\" ;
-	char dir4[200]="K:\\sdf\\volume\\clean\\clean\\ep\\clean\\";
-	char dir5[200]="L:\\sdfdata2\\people\\";
-	strcat(dir3,dst1);
-	strcat(dir4,dst2);
-	strcat(dir5,dst1);
-	//short * indata2=test.readStream(dir4,&l,&m,&n);
-	//cout<<m<<endl;
-	//float * indata1=test.readStreamfloat(dir3,&l,&m,&n);
-
-	//char * file="L:\\sdfdata2\\inner\\",
-	//	*file1="K:\\sdf\\volume\\clean\\clean\\ep\\clean\\";
-	//int l = 512,
-	//	m = 512,
-	//	n = 700;
-	//int l = 0,
-	//	m = 0,
-	//	n = 0;
-	//RawImage test;
-	short*orgiondata=test.readStream(dir4,&l,&m,&n);
-	PIXTYPE * innerdata=test.readStreamfloat(dir3,&l,&m,&n);
-
-	Raw src(l,m,n,innerdata);
-	float *inputo=new float[l*m*n];
-	for (int i = 0; i < l*m*n; i++)
-	{
-		inputo[i]=(float) orgiondata[i];		
-	}
-	Raw *orgion = new Raw(l,m,n,inputo);
-	
-	
-	int count=0,time=4;
-	do 
-	{
-		//Raw srcnew(src);
-		for (int k =1; k< n-1 ;k++)
-		{
-			for (int j = 1; j < m-1; j++)
-			{
-				for (int i = 1; i < l-1; i++)
-				{
-					PIXTYPE val =src.get(i,j,k);
-					//unsigned char * p= (unsigned char *)innerdata;
-					//std::swap(p[0],p[3]);
-					//std::swap(p[1],p[2]);
-
-					if (val==100)
-					{		
-						PIXTYPE data1=orgion->get ( i-1, j ,k);
-						//PIXTYPE *q=&data1;
-						//unsigned char * p= (unsigned char*) q;
-						//std::swap(p[0],p[3]);
-						//std::swap(p[1],p[2]);
-							if (sign(data1))
-							{
-								src.put(i-1 ,j,k,100);
-								count++;
-							}
-							if (sign(orgion->get(i-1 ,j-1,k)))
-							{
-								src.put(i-1,j-1,k,100);
-								count ++;
-							}
-						
-							if (sign(orgion->get(i-1,j+1,k)))
-							{
-								src.put(i-1,j+1,k,100);
-								count++;
-							}
-							if (sign(orgion->get(i,j-1,k)))
-							{
-								src.put(i,j-1,k,100);
-								count++;
-							}
-							if (sign(orgion->get(i,j+1,k)))
-							{
-								src.put(i,j+1,k,100);
-								count++;
-							}
-							if (sign(orgion->get(i+1,j,k)) )
-							{
-								src.put(i+1,j,k,100);
-								count++;
-							}
-							if (sign(orgion->get(i+1,j-1,k)))
-							{
-								src.put(i+1,j-1,k,100);
-								count++;
-							}
-							if (sign(orgion->get(i+1,j+1,k)))
-							{
-								src.put(i+1,j+1,k,100);
-								count++;
-							}
-					}
-
-				}
-			}
-
-		}
-		
-		time--;
-		cout <<count <<endl;
-		
-	} while (time);
-	
-	test.writeImageName(src,dir5);
-}
+//void rocwayinner2people(string dir1, string dir2)
+//{
+//	int l=0,m=0,n=0;
+//	char dst1[200],dst2[200];
+//	strcpy(dst1,dir1.c_str()); //string-->char
+//	strcpy(dst2,dir2.c_str());
+//	RawImage test;
+//	char dir3[200]="L:\\sdfdata2\\inner\\" ;
+//	char dir4[200]="K:\\sdf\\volume\\clean\\clean\\ep\\clean\\";
+//	char dir5[200]="L:\\sdfdata2\\people\\";
+//	strcat(dir3,dst1);
+//	strcat(dir4,dst2);
+//	strcat(dir5,dst1);
+//	//short * indata2=test.readStream(dir4,&l,&m,&n);
+//	//cout<<m<<endl;
+//	//float * indata1=test.readStreamfloat(dir3,&l,&m,&n);
+//
+//	//char * file="L:\\sdfdata2\\inner\\",
+//	//	*file1="K:\\sdf\\volume\\clean\\clean\\ep\\clean\\";
+//	//int l = 512,
+//	//	m = 512,
+//	//	n = 700;
+//	//int l = 0,
+//	//	m = 0,
+//	//	n = 0;
+//	//RawImage test;
+//	short*orgiondata=test.readStream(dir4,&l,&m,&n);
+//	PIXTYPE * innerdata=test.readStreamfloat(dir3,&l,&m,&n);
+//
+//	Raw src(l,m,n,innerdata);
+//	float *inputo=new float[l*m*n];
+//	for (int i = 0; i < l*m*n; i++)
+//	{
+//		inputo[i]=(float) orgiondata[i];		
+//	}
+//	Raw *orgion = new Raw(l,m,n,inputo);
+//	
+//	
+//	int count=0,time=4;
+//	do 
+//	{
+//		//Raw srcnew(src);
+//		for (int k =1; k< n-1 ;k++)
+//		{
+//			for (int j = 1; j < m-1; j++)
+//			{
+//				for (int i = 1; i < l-1; i++)
+//				{
+//					PIXTYPE val =src.get(i,j,k);
+//					//unsigned char * p= (unsigned char *)innerdata;
+//					//std::swap(p[0],p[3]);
+//					//std::swap(p[1],p[2]);
+//
+//					if (val==100)
+//					{		
+//						PIXTYPE data1=orgion->get ( i-1, j ,k);
+//						//PIXTYPE *q=&data1;
+//						//unsigned char * p= (unsigned char*) q;
+//						//std::swap(p[0],p[3]);
+//						//std::swap(p[1],p[2]);
+//							if (sign(data1))
+//							{
+//								src.put(i-1 ,j,k,100);
+//								count++;
+//							}
+//							if (sign(orgion->get(i-1 ,j-1,k)))
+//							{
+//								src.put(i-1,j-1,k,100);
+//								count ++;
+//							}
+//						
+//							if (sign(orgion->get(i-1,j+1,k)))
+//							{
+//								src.put(i-1,j+1,k,100);
+//								count++;
+//							}
+//							if (sign(orgion->get(i,j-1,k)))
+//							{
+//								src.put(i,j-1,k,100);
+//								count++;
+//							}
+//							if (sign(orgion->get(i,j+1,k)))
+//							{
+//								src.put(i,j+1,k,100);
+//								count++;
+//							}
+//							if (sign(orgion->get(i+1,j,k)) )
+//							{
+//								src.put(i+1,j,k,100);
+//								count++;
+//							}
+//							if (sign(orgion->get(i+1,j-1,k)))
+//							{
+//								src.put(i+1,j-1,k,100);
+//								count++;
+//							}
+//							if (sign(orgion->get(i+1,j+1,k)))
+//							{
+//								src.put(i+1,j+1,k,100);
+//								count++;
+//							}
+//					}
+//
+//				}
+//			}
+//
+//		}
+//		
+//		time--;
+//		cout <<count <<endl;
+//		
+//	} while (time);
+//	
+//	test.writeImageName(src,dir5);
+//}

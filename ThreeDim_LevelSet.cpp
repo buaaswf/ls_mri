@@ -206,7 +206,7 @@ Raw sin(Raw & src)
 		{
 			for (int k = 0; k < src.getZsize(); k++)
 			{
-				src.put( i, j, k, sin(src.get( i, j ,k)));
+				src.put( i, j, k, sin((float)src.get( i, j ,k)));
 			}
 		}
 	}
