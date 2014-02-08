@@ -291,9 +291,9 @@ Raw ThreeDim_LevelSet::minimal_surface(Raw &phi,Raw &g,double lambda,double mu,d
 		phi_x += phi_y += phi_z += g*curvature;
 		phi_x *= lambda;
 		phi_x += g*alfa;
-		phi_x *= Dirac(phi,epsilon);
+		phi_x *= Dirac(phi,epsilon)*((double)timestep);
 
-		phi += (distRegTerm)*mu*((double)timestep);
+		phi_x += (distRegTerm)*mu*((double)timestep);
 		phi += phi_x;
 		cout<<"iterator i="<<i<<endl;
 	}	
